@@ -29,7 +29,11 @@ elif 2 < pred <= 3:
 
 for label in labels:
     masses += [label]
-    df += [pd.read_csv(f"/Users/LEGION/Desktop/FYP/Data/Zenodo/0p0/{label}.data", sep="\s+")]
+    df += [
+        pd.read_csv(
+            f"/Users/LEGION/Desktop/FYP/Data/Zenodo/0p0/{label}.data", sep="\s+"
+        )
+    ]
 masses = np.array(masses)
 
 ages = []
@@ -81,9 +85,9 @@ plt.plot(predicted_ages[0], predicted_lums[0], label=f"predicted {pred}")
 # plt.plot(ages[2], lums[2], label="grid 0.4")
 # plt.xscale("log")
 
-for i,label in enumerate(labels):
+for i, label in enumerate(labels):
     plt.plot(ages[i], lums[i], label=f"grid {label}")
 
-    
-plt.legend()
+
+plt.legend(fontsize=6)
 plt.show()
