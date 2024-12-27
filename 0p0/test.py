@@ -2,35 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-labels1 = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.8, 0.9, 1, 1.1, 1.2, 1.3]
-labels2 = [
-    1.4,
-    1.5,
-    1.6,
-    1.7,
-    1.8,
-]
-labels3 = [
-    1.9,
-    2,
-    2.1,
-    2.2,
-    2.3,
-]
-labels4 = [2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3]
+labels = [11,12,13,14,15,16,17,18]
 df = []
 df1 = []
 masses = []
 pred =float(input("What is the mass ="))
 
-if 0 < pred < 1.4:
-    labels = labels1
-elif 1.4 <= pred <= 1.8:
-    labels = labels2
-elif 1.8 < pred <= 2.3:
-    labels = labels3
-elif 2.3 < pred <= 3:
-    labels = labels4
 
 
 for label in labels:
