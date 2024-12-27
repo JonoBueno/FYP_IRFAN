@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import os
 
 labels = [11,12,13,14,15,16,17,18]
 df = []
@@ -14,8 +15,8 @@ for label in labels:
 
     if label != pred:
         masses += [label]
-        df += [pd.read_csv(f"{label}.data", sep="\s+")]
-    df1 += [pd.read_csv(f"{label}.data", sep="\s+")]
+        df += [pd.read_csv(f"./0p0/{label}.data", sep="\s+")]
+    df1 += [pd.read_csv(f"./0p0/{label}.data", sep="\s+")]
 masses = np.array(masses)
 
 ages = []
