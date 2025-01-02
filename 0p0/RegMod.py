@@ -1,14 +1,8 @@
+import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
 
-
-# Define the flux calculation function with ergs-to-meV conversion
-def Flux(L, r):
-    return L / (4 * np.pi * r**2)
-
-
-labels = [
+labels1 = [
     0.2,
     0.3,
     0.4,
@@ -19,71 +13,125 @@ labels = [
     0.8,
     0.9,
     1,
-    1.1,
-    1.2,
-    1.3,
-    1.4,
-    1.5,
-    1.6,
-    1.7,
-    1.8,
-    1.9,
+]
+labels2 = [1.6, 1.7, 1.8, 1.9]
+labels3 = [
     2,
     2.1,
     2.2,
     2.3,
-    2.4,
-    2.5,
-    2.6,
-    2.7,
-    2.8,
-    2.9,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
 ]
-df = pd.read_t
-# Load the main data file
-df1 = pd.read_csv("0.4.data", sep="\s+")
-df2 = pd.read_csv("0.5.data", sep="\s+")
+labels4 = [2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3]
+labels5 = [    1.1,
+    1.2,
+    1.3,
+    1.4,
+    1.5,
+]
+df = []
+df1 = []
+masses = []
+pred = 2.9 # float(input("What is the mass ="))
 
-Ln1 = df1["log_Lneu"].values.reshape(-1, 1)
-Age1 = df1["star_age"].values.reshape(-1, 1)
-Ln2 = df2["log_Lneu"].values.reshape(-1, 1)
-Age2 = df2["star_age"].values.reshape(-1, 1)
-startage = []
-endage = []
-print(labels)
+if 0 < pred <= 1:
+    labels = labels1
+elif 1.5 <= pred <= 1.9:
+    labels = labels2
+elif 1.9 < pred <= 2.3:
+    labels = labels3
+elif 2.3 < pred <= 3:
+    labels = labels4
+elif 1 < pred < 1.5:
+    labels = labels5
 
 
-for file in labels:
-    df = pd.read_csv(f"{file}.data", sep="\s+")
-    startage.append(df["star_age"].iloc[0])
-    endage.append(df["star_age"].iloc[-1])
+for label in labels:
 
-print(startage)
-print(endage)
+    if label != pred:
+        masses += [label]
+        df += [pd.read_csv(f"0p0/{label}.data", sep="\s+")]
+    df1 += [pd.read_csv(f"0p0/{label}.data", sep="\s+")]
+masses = np.array(masses)
 
-import sklearn.kernel_ridge as kr
+ages = []
+lums = []
+ages1 = []
+lums1 = []
+for d in df:
+    condition = 10 * d["log_LH"] > 1 * 10 * d["log_L"]
+    if condition.any():
+        start_h_burning = d.loc[condition, "star_age"].iloc[0]
+    else:
+        start_h_burning = None
 
-model1 = kr(kernel="rbf", alpha=1.0, gamma=0.1)  # Adjust alpha and gamma as needed
-model2 = kr(kernel="rbf", alpha=1.0, gamma=0.1)
-mode3 = kr(kernel="rbf", alpha=1.0, gamma=0.1)
+    condition = d["center_h1"] < 1e-6
+    if condition.any():
+        end_h_burning = d.loc[condition, "star_age"].iloc[0]
+    else:
+        end_h_burning = None
 
-model1.fit(Age2, Ln2)
-model2.fit(labels, startage)
+    d = d[(d["star_age"] > start_h_burning) & (d["star_age"] < end_h_burning)]
+
+    ages += [d["star_age"]]
+    lums += [d["log_Lneu"]]
+
+for d in df1:
+    condition = 10 * d["log_LH"] > 1 * 10 * d["log_L"]
+    if condition.any():
+        start_h_burning = d.loc[condition, "star_age"].iloc[0]
+    else:
+        start_h_burning = None
+
+    condition = d["center_h1"] < 1e-6
+    if condition.any():
+        end_h_burning = d.loc[condition, "star_age"].iloc[0]
+    else:
+        end_h_burning = None
+
+    d = d[(d["star_age"] > start_h_burning) & (d["star_age"] < end_h_burning)]
+
+    ages1 += [d["star_age"]]
+    lums1 += [d["log_Lneu"]]
+
+min_length = min(len(lum) for lum in lums)
+ages = np.log([age[:min_length] for age in ages])
+lums = np.array([lum[:min_length] for lum in lums])
+
+min_length = min(len(lum) for lum in lums1)
+ages1 = np.log([age[:min_length] for age in ages1])
+lums1 = np.array([lum[:min_length] for lum in lums1])
+
+from sklearn.linear_model import LinearRegression as LnR
+
+output = np.array(
+    [
+        *(i for z in zip(ages.T, lums.T) for i in z),
+    ]
+).T
+print(output.shape)
+model = LnR()
+model.fit(np.array([masses]).T, output)
+
+# n = -2
+# prediction = model.predict([[masses[n]]])
+prediction = model.predict([[pred]])
+predicted_ages = prediction[:, ::2]
+predicted_lums = prediction[:, 1::2]
+print(prediction.shape)
+
+plt.plot(predicted_ages[0], predicted_lums[0], label=f"predicted {pred}")
+
+# plt.plot(ages[n], lums[n], label="real")
+# plt.plot(ages[1], lums[1], label="grid")
+# plt.plot(ages[2], lums[2], label="grid 0.4")
+# plt.xscale("log")
+
+# for i, label in enumerate(labels):
+#     plt.plot(ages1[i], lums1[i], label=f"grid {label}")
+
+plt.plot(ages1[-2], lums1[-2], label=f"grid {2.9}")
+plt.ylabel('Luminosity')
+plt.xlabel('Star Age')
+plt.legend(fontsize=6)
+
+plt.show()
