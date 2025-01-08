@@ -67,16 +67,16 @@ min_length = min(len(lum) for lum in lums)
 ages = np.log([age[:min_length] for age in ages])
 lums = np.array([lum[:min_length] for lum in lums])
 
-for a, l, label in zip(ages, lums, labels):
-    plt.plot(a, l, label=label)
-plt.legend(fontsize=6)
-plt.xscale('log')
-plt.show()
+# for a, l, label in zip(ages, lums, labels):
+#     plt.plot(a, l, label=label)
+# plt.legend(fontsize=6)
+# plt.xscale('log')
+# plt.show()
 
 from mpl_toolkits import mplot3d
 
-fig = plt.figure(figsize = (10,10))
-ax = plt.axes(projection='3d')
+# fig = plt.figure(figsize = (10,10))
+# ax = plt.axes(projection='3d')
 
 fig = plt.figure(figsize = (8,8))
 ax = plt.axes(projection='3d')

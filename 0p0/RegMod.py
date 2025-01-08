@@ -2,10 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-labels1 = [
-    0.2,
-    0.3,
-    0.4,
+labels = [
     0.5,
     0.6,
     0.7,
@@ -13,36 +10,14 @@ labels1 = [
     0.8,
     0.9,
     1,
-]
-labels2 = [1.6, 1.7, 1.8, 1.9]
-labels3 = [
-    2,
-    2.1,
-    2.2,
-    2.3,
-]
-labels4 = [2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3]
-labels5 = [    1.1,
+    1.1,
     1.2,
-    1.3,
-    1.4,
-    1.5,
-]
+    ]
+
 df = []
 df1 = []
 masses = []
-pred = 2.9 # float(input("What is the mass ="))
-
-if 0 < pred <= 1:
-    labels = labels1
-elif 1.5 <= pred <= 1.9:
-    labels = labels2
-elif 1.9 < pred <= 2.3:
-    labels = labels3
-elif 2.3 < pred <= 3:
-    labels = labels4
-elif 1 < pred < 1.5:
-    labels = labels5
+pred = 1 # float(input("What is the mass ="))
 
 
 for label in labels:
@@ -126,10 +101,10 @@ plt.plot(predicted_ages[0], predicted_lums[0], label=f"predicted {pred}")
 # plt.plot(ages[2], lums[2], label="grid 0.4")
 # plt.xscale("log")
 
-# for i, label in enumerate(labels):
-#     plt.plot(ages1[i], lums1[i], label=f"grid {label}")
+for i, label in enumerate(labels):
+    plt.plot(ages1[i], lums1[i], label=f"grid {label}")
 
-plt.plot(ages1[-2], lums1[-2], label=f"grid {2.9}")
+# plt.plot(ages1[6], lums1[6], label=f"grid {2.9}")
 plt.ylabel('Luminosity')
 plt.xlabel('Star Age')
 plt.legend(fontsize=6)
