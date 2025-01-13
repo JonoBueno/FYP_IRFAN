@@ -64,7 +64,7 @@ for d in df:
     lums += [d["log_Lneu"]]
 
 min_length = min(len(lum) for lum in lums)
-ages = np.log([age[:min_length] for age in ages])
+ages = np.log10([age[:min_length] for age in ages])
 lums = np.array([lum[:min_length] for lum in lums])
 
 # for a, l, label in zip(ages, lums, labels):
@@ -92,8 +92,8 @@ for i,label in  enumerate(labels):
     ax.set_title('3D Parametric Plot')
 
     # Set axes label
-    ax.set_xlabel('luminosity', labelpad=20)
-    ax.set_ylabel('Star Age', labelpad=20)
-    ax.set_zlabel('Mass', labelpad=20)
+    ax.set_xlabel(r'luminosity $log(L_\nu /L_\odot)$', labelpad=20)
+    ax.set_ylabel(r'Star Age [$10^x$yr]', labelpad=20)
+    ax.set_zlabel(r'Mass $M_\odot$', labelpad=20)
 
 plt.show()
